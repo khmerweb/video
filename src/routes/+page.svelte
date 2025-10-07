@@ -1,5 +1,5 @@
     <script>
-
+        import { base } from '$app/paths';
         let worker;
         let queryResult = $state(null);
         let errorMessage = $state(null);
