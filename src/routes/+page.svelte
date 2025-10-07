@@ -7,7 +7,7 @@
 
         $effect( async () => {
             const worker = new Worker(new URL('/src/lib/db/worker.js', import.meta.url), { type: 'module' });
-
+alert(base)
             worker.onmessage = (e) => {
                 const { type, results, error } = e.data;
                 if (type === 'init_success') {
