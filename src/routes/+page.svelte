@@ -6,7 +6,6 @@
         let formattedData = $state([]);
 
         $effect( async () => {
-            //worker = new Worker('/src/lib/db/worker.js', { type: 'module' });
             const worker = new Worker(new URL('/src/lib/db/worker.js', import.meta.url), { type: 'module' });
 
             worker.onmessage = (e) => {
