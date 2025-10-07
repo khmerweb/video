@@ -30,7 +30,7 @@
                 return '/'; 
             };
 
-            worker.postMessage({ type: 'init', payload: { dbPath: '/database.sqlite' } });
+            worker.postMessage({ type: 'init', payload: { dbPath: '/database.sqlite' }, basePath: getBasePath() });
             
             const columns = queryResult[0].columns;
             const values = queryResult[0].values;

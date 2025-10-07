@@ -4,13 +4,13 @@
     let db;
 
     self.onmessage = async (e) => {
-        const { type, payload } = e.data;
+        const { type, payload, basePath } = e.data;
 
         switch (type) {
             case 'init':
                 try {
                     const SQL = await initSqlJs({
-                        locateFile: file => `${getBasePath()}/${file}` // Adjust path as needed
+                        locateFile: file => `${basePath}${file}` // Adjust path as needed
                     });
                     const response = await fetch(payload.dbPath);
                     const buffer = await response.arrayBuffer();
