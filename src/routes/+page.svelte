@@ -24,7 +24,7 @@
 
             const getBasePath = () => {
                 const pathParts = window.location.pathname.split('/');
-                if (pathParts.length > 1 && pathParts[1] === 'static-sqlite') {
+                if (pathParts.length > 1 && pathParts[1] === 'video') {
                     return `/${pathParts[1]}/`;
                 }
                 return '/'; 
