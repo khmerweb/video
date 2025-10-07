@@ -21,7 +21,7 @@
                     errorMessage = `Query failed: ${error}`;
                 }
             };
-//
+
             const getBasePath = () => {
                 const pathParts = window.location.pathname.split('/');
                 if (pathParts.length > 1 && pathParts[1] === 'video') {
