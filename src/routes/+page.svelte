@@ -22,6 +22,14 @@
                 }
             };
 
+            const getBasePath = () => {
+                const pathParts = window.location.pathname.split('/');
+                if (pathParts.length > 1 && pathParts[1] === 'static-sqlite') {
+                    return `/${pathParts[1]}/`;
+                }
+                return '/'; 
+            };
+
             worker.postMessage({ type: 'init', payload: { dbPath: '/database.sqlite' } });
             
             const columns = queryResult[0].columns;

@@ -10,7 +10,7 @@
             case 'init':
                 try {
                     const SQL = await initSqlJs({
-                        locateFile: file => `/sql-wasm.wasm` // Adjust path as needed
+                        locateFile: file => `${getBasePath()}/${file}` // Adjust path as needed
                     });
                     const response = await fetch(payload.dbPath);
                     const buffer = await response.arrayBuffer();
