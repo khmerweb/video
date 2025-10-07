@@ -6,7 +6,7 @@
         let formattedData = $state([]);
 
         $effect( async () => {
-            const worker = new Worker(new URL('/src/lib/db/worker.js', import.meta.url), { type: 'module' });
+            const worker = new Worker(new URL('/static-sqlite/src/lib/db/worker.js', import.meta.url), { type: 'module' });
 
             worker.onmessage = (e) => {
                 const { type, results, error } = e.data;
