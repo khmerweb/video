@@ -22,7 +22,7 @@ export async function loadDatabase() {
             
             const getBasePath = () => {
                 const pathParts = window.location.pathname.split('/');
-                if (pathParts.length > 1 && pathParts[1].length > 0) {
+                if (pathParts.length > 1 && pathParts[1] === 'video') {
                     return `/${pathParts[1]}/`;
                 }
                 return '/'; 
