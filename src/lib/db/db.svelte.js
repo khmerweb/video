@@ -7,6 +7,7 @@ let formattedData = $state([]);
 export async function loadDatabase(base) {
     
     const worker = new Worker(new URL('/src/lib/db/worker.js', import.meta.url), { type: 'module' });
+    alert();
             worker.onmessage = (e) => {
                 const { type, results, error } = e.data;
                 if (type === 'init_success') {
@@ -43,7 +44,7 @@ export async function loadDatabase(base) {
             });
 
             worker.terminate();
-alert(formattedData.length);
+
         return formattedData;
 }
 
