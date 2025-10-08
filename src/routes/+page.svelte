@@ -13,7 +13,7 @@
             formattedData = await loadDatabase(base);
         });
     </script>
-{formattedData.length}
+
     {#if formattedData.length > 0}
         <pre>{JSON.stringify(formattedData, null, 2)}</pre>
     {:else}
