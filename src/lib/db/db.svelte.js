@@ -27,7 +27,7 @@ export async function loadDatabase() {
                 }
                 return '/'; 
             };
-alert(getBasePath());
+
             worker.postMessage({ type: 'init', payload: { dbPath: `${getBasePath()}database.sqlite` }, basePath: getBasePath() });
             
             const columns = queryResult[0].columns;
