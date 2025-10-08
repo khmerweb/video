@@ -18,6 +18,7 @@
 		"vite": "^7.1.7"
 	},
 	"dependencies": {
+		"jquery": "^3.7.1",
 		"sql.js": "^1.13.0"
 	}
 }

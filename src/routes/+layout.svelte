@@ -1,5 +1,5 @@
 <script>
-	import favicon from '$lib/assets/favicon.svg';
+	import favicon from '$lib/assets/favicon.png';
 	let { children } = $props();
 	import { dbStore } from '$lib/store/state.svelte.js';
 	import { loadDatabase } from '$lib/db/db.svelte.js';
