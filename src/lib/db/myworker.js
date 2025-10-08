@@ -1,11 +1,10 @@
-    // src/workers/dbWorker.js
+// src/workers/dbWorker.js
     import initSqlJs from 'sql.js';
     import { dbState } from '../store/state.svelte.js';
 
-    self.onmessage = async (e) => {
-        console.log('Worker received message:');
-        const { type, payload, basePath } = e.data;
-
+    self.onmessage = async (event) => {
+        const { type, payload, basePath } = event.data;
+    
         switch (type) {
             case 'init':
                 try {
@@ -30,4 +29,5 @@
                 break;
             // Add other cases for updates, inserts, etc.
         }
+            
     };
