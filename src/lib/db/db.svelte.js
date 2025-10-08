@@ -19,7 +19,7 @@ export async function loadDatabase(base) {
                 } else if (type === 'query_error') {
                     errorMessage = `Query failed: ${error}`;
                 }
-                alert(results);
+                alert();
             };
             
             const getBasePath = () => {
