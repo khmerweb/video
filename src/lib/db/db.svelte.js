@@ -6,10 +6,10 @@ let queryResult = $state(null);
 let errorMessage = $state(null);
 let formattedData = $state([]);
 
-export async function loadDatabase(base) {
+export async function loadDatabase() {
     const worker = new MyWorker();
     worker.onmessage = async (event) => {
-        const { type, results, error } = event.data;
+        const { type, results, error } = await event.data;
                 
         if (type === 'init_success') {
             console.log('Database initialized in worker');
@@ -17,24 +17,24 @@ export async function loadDatabase(base) {
         } else if (type === 'init_error') {
             errorMessage = `Worker initialization failed: ${error}`;
         } else if (type === 'query_success') {
-            queryResult = results;
+            queryResult = await results;
+            const columns = queryResult[0].columns;
+            const values = queryResult[0].values;
+            formattedData = values.map((row) => {
+                const rowObject = {};
+                columns.forEach((colName, index) => {
+                    rowObject[colName] = row[index];
+                });
+                return rowObject;
+            });
+            
+            dbStore.db = formattedData;
+            worker.terminate();
         } else if (type === 'query_error') {
             errorMessage = `Query failed: ${error}`;
         }
-                
-        const columns = queryResult[0].columns;
-        const values = queryResult[0].values;
-        formattedData = values.map((row) => {
-            const rowObject = {};
-            columns.forEach((colName, index) => {
-                rowObject[colName] = row[index];
-            });
-            return rowObject;
-        });
-            
-        dbStore.db = formattedData;
-        worker.terminate();
-    };
+    }
+        
            
     const getBasePath = () => {
         const pathParts = window.location.pathname.split('/');
@@ -45,8 +45,6 @@ export async function loadDatabase(base) {
     };
 
     worker.postMessage({ type: 'init', payload: { dbPath: `${getBasePath()}database.sqlite` }, basePath: getBasePath() });
-            
-    //worker.terminate();
 
     return formattedData;
 }

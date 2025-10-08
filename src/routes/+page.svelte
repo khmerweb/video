@@ -1,13 +1,15 @@
     <script>
         import { base } from '$app/paths';
         import { loadDatabase } from '$lib/db/db.svelte.js';
-        
-        let formattedData = $state([]);
-        let message = '';
+        //import { dbStore } from '../store/state.svelte.js';
 
-        $effect(async () => {
-            formattedData = await loadDatabase(base);
-        });
+        let formattedData = $state([]);
+
+    $effect(async () => {
+        if(formattedData.length === 0){
+            formattedData = await loadDatabase();
+        }
+    });
     </script>
 
     {#if formattedData.length > 0}

@@ -1,6 +1,7 @@
 // src/workers/dbWorker.js
 import initSqlJs from 'sql.js';
 let db = null;
+
 self.onmessage = async (event) => {
     const { type, payload, basePath } = event.data;
     
