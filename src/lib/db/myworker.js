@@ -1,7 +1,7 @@
 // src/workers/dbWorker.js
     import initSqlJs from 'sql.js';
-    import { dbState } from '../store/state.svelte.js';
-
+    //import { dbState } from '../store/state.svelte.js';
+    let db = null;
     self.onmessage = async (event) => {
         const { type, payload, basePath } = event.data;
     
@@ -13,7 +13,7 @@
                     });
                     const response = await fetch(payload.dbPath);
                     const buffer = await response.arrayBuffer();
-                    dbState.db = new SQL.Database(new Uint8Array(buffer));
+                    db = new SQL.Database(new Uint8Array(buffer));
                     self.postMessage({ type: 'init_success' });
                 } catch (error) {
                     self.postMessage({ type: 'init_error', error: error.message });
@@ -21,7 +21,7 @@
                 break;
             case 'query':
                 try {
-                    const results = dbState.db.exec(payload.sql);
+                    const results = db.exec(payload.sql);
                     self.postMessage({ type: 'query_success', results });
                 } catch (error) {
                     self.postMessage({ type: 'query_error', error: error.message });
