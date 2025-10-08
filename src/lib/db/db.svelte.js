@@ -18,6 +18,7 @@ export async function loadDatabase() {
             errorMessage = `Worker initialization failed: ${error}`;
         } else if (type === 'query_success') {
             queryResult = await results;
+            
             const columns = queryResult[0].columns;
             const values = queryResult[0].values;
             formattedData = values.map((row) => {
@@ -27,8 +28,10 @@ export async function loadDatabase() {
                 });
                 return rowObject;
             });
+            if(dbStore.db.length === 0){
+                dbStore.db = formattedData;
+            }
             
-            dbStore.db = formattedData;
             worker.terminate();
         } else if (type === 'query_error') {
             errorMessage = `Query failed: ${error}`;
