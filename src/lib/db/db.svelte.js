@@ -30,7 +30,7 @@ export async function loadDatabase(base) {
                 return '/'; 
             };
 
-            worker.postMessage({ type: 'init', payload: { dbPath: `${base}/database.sqlite` }, basePath: getBasePath() });
+            worker.postMessage({ type: 'init', payload: { dbPath: `${getBasePath()}database.sqlite` }, basePath: getBasePath() });
             
             const columns = queryResult[0].columns;
             const values = queryResult[0].values;
