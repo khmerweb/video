@@ -1,5 +1,5 @@
 // src/lib/db/db.js
-import MyWorker from '$lib/db/myworker.js?worker';
+import MyWorker from '$lib/db/myworker.svelte.js?worker';
 let worker;
 let queryResult = $state(null);
 let errorMessage = $state(null);
