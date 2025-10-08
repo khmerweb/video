@@ -3,7 +3,7 @@
         import { loadDatabase } from '$lib/db/db.svelte.js';
         
         let formattedData = $state([]);  
-
+//
         $effect(async () => {
             formattedData = await loadDatabase(base);
         });
