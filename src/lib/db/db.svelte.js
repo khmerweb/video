@@ -8,6 +8,7 @@ export async function loadDatabase(base) {
     
     const worker = new Worker(new URL('/src/lib/db/worker.js', import.meta.url), { type: 'module' });
             worker.onmessage = (e) => {
+                alert();
                 const { type, results, error } = e.data;
                 if (type === 'init_success') {
                     console.log('Database initialized in worker');
@@ -19,7 +20,7 @@ export async function loadDatabase(base) {
                 } else if (type === 'query_error') {
                     errorMessage = `Query failed: ${error}`;
                 }
-                alert();
+                
             };
             
             const getBasePath = () => {
