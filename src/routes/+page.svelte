@@ -5,8 +5,7 @@
         let formattedData = $state([]);  
 
         $effect(async () => {
-            alert(`Base path is: ${base}`);
-            formattedData = await loadDatabase();
+            formattedData = await loadDatabase(base);
         });
     </script>
 

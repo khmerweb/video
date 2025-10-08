@@ -4,7 +4,7 @@ let queryResult = $state(null);
 let errorMessage = $state(null);
 let formattedData = $state([]);
 
-export async function loadDatabase() {
+export async function loadDatabase(base) {
     const worker = new Worker(new URL('/src/lib/db/worker.js', import.meta.url), { type: 'module' });
             worker.onmessage = (e) => {
                 const { type, results, error } = e.data;
@@ -28,7 +28,7 @@ export async function loadDatabase() {
                 return '/'; 
             };
 
-            worker.postMessage({ type: 'init', payload: { dbPath: `${getBasePath()}database.sqlite` }, basePath: getBasePath() });
+            worker.postMessage({ type: 'init', payload: { dbPath: `${base}/database.sqlite` }, basePath: getBasePath() });
             
             const columns = queryResult[0].columns;
             const values = queryResult[0].values;
