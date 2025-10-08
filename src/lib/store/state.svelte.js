@@ -1,4 +1,4 @@
-
-export const dbState = $state({
-    db: null,
-}); 
+// src/lib/store/state.svelte.js
+export const dbStore = $state({
+    db: [],
+});

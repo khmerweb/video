@@ -1,5 +1,6 @@
 // src/lib/db/db.js
 import MyWorker from '$lib/db/myworker.js?worker';
+import { dbStore } from '../store/state.svelte.js';
 let worker;
 let queryResult = $state(null);
 let errorMessage = $state(null);
@@ -31,6 +32,7 @@ export async function loadDatabase(base) {
             return rowObject;
         });
             
+        dbStore.db = formattedData;
         worker.terminate();
     };
            
