@@ -50,7 +50,7 @@
 }
 
         $effect(async () => {
-            formattedData = await loadDatabase(base);
+            await loadDatabase(base);
         });
     </script>
 
