@@ -5,7 +5,7 @@ let errorMessage = $state(null);
 let formattedData = $state([]);
 
 export async function loadDatabase(base) {
-    alert()
+    
     const worker = new Worker(new URL('/src/lib/db/worker.js', import.meta.url), { type: 'module' });
             worker.onmessage = (e) => {
                 const { type, results, error } = e.data;
@@ -43,7 +43,7 @@ export async function loadDatabase(base) {
             });
 
             worker.terminate();
-
+alert(formattedData.length);
         return formattedData;
 }
 
