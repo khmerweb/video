@@ -174,6 +174,89 @@
         jq(`.Home .container .wrapper:nth-child(${player.part+1}) p`).css({'display':'block'})
     }
 
+    async function newPlaylist(){
+        player.unMute()
+        player.loadVideoById(laodingVideo)
+        if(player.playlist.category !== 'news'){
+            player.playlist = await getRandomPlaylist(player.playlist.category, player.playlist.thumbs) 
+        }
+        jq(`.Home .container .wrapper:nth-child(${player.part+1}) img`).css({'filter':normal})
+        jq(`.Home .container .wrapper:nth-child(${player.part+1}) p`).css({'display':'none'})
+        player.part = 0
+        if(player.playlist[player.part][0].type === "YouTubePlaylist"){
+            player.loadVideoById(initialVideoId)
+            player.loadPlaylist({list:player.playlist[player.part][0].id,listType:'playlist',index:0})
+        }else{
+            player.index = 0
+            if(!(player.playlist[player.part].reversal)){
+                player.playlist[player.part].reverse()
+                player.playlist[player.part].reversal = true
+            }
+            player.loadVideoById(player.playlist[player.part][0].id)
+        }
+        
+        jq(`.Home .container .wrapper:nth-child(${player.part+1}) img`).css({'filter':dark})
+        jq(`.Home .container .wrapper:nth-child(${player.part+1}) p`).css({'display':'block'})
+    }
+
+    function nextPrevious(move){
+        player.unMute()
+        if(move === "next"){
+            if(player.index + 1 < player.playlist[player.part].length){
+                player.index += 1
+                player.loadVideoById(player.playlist[player.part][player.index].id)
+            }else{
+                jq(`.Home .container .wrapper:nth-child(${player.part+1}) img`).css({'filter':normal})
+                jq(`.Home .container .wrapper:nth-child(${player.part+1}) p`).css({'display':'none'})
+                player.part += 1
+                if(player.part === player.playlist.length){
+                    player.part = 0
+                }
+
+                if(player.playlist[player.part][0].type === "YouTubePlaylist"){
+                    player.loadVideoById(initialVideoId)
+                    player.loadPlaylist({list:player.playlist[player.part][0].id,listType:'playlist',index:0})
+                }else{
+                    player.index = 0
+                    if(!(player.playlist[player.part].reversal)){
+                        player.playlist[player.part].reverse()
+                        player.playlist[player.part].reversal = true
+                    }
+                    player.loadVideoById(player.playlist[player.part][0].id)
+                }
+                jq(`.Home .container .wrapper:nth-child(${player.part+1}) img`).css({'filter':dark})
+                jq(`.Home .container .wrapper:nth-child(${player.part+1}) p`).css({'display':'block'})
+            }
+        }else if(move === "previous"){
+            if(player.index > 0){
+                player.index -= 1
+                player.loadVideoById(player.playlist[player.part][player.index].id)
+            }else{
+                jq(`.Home .container .wrapper:nth-child(${player.part+1}) img`).css({'filter':normal})
+                jq(`.Home .container .wrapper:nth-child(${player.part+1}) p`).css({'display':'none'})
+                player.part -= 1
+                if(player.part < 0){
+                    player.part = player.playlist.length - 1
+                }
+
+                if(player.playlist[player.part][0].type === "YouTubePlaylist"){
+                    player.loadVideoById(initialVideoId)
+                    player.loadPlaylist({list:player.playlist[player.part][0].id,listType:'playlist',index:0})
+                }else{
+                    player.index = 0
+                    if(!(player.playlist[player.part].reversal)){
+                        player.playlist[player.part].reverse()
+                        player.playlist[player.part].reversal = true
+                    }
+                    player.loadVideoById(player.playlist[player.part][0].id)
+                }
+                jq(`.Home .container .wrapper:nth-child(${player.part+1}) img`).css({'filter':dark})
+                jq(`.Home .container .wrapper:nth-child(${player.part+1}) p`).css({'display':'block'})
+            }
+        }
+    }
+
+
     $effect(()=>{
         if(data?.news){
             posts = data.news;
@@ -250,8 +333,8 @@
                     <img src="/images/siteLogo.png" alt=''/>
                 </div>
                 <div class="play-all">
-                    <button onclick={()=>changeCategory(videoPlaylists.home, 'ទំព័រ​ដើម', rawPlaylist.home)} class='center'>ទំព័រ​ដើម</button>
-                    <button onclick={()=>changeCategory(videoPlaylists.news, 'ព័ត៌មាន', rawPlaylist.news)} class='center'>ព័ត៌មាន</button>
+                    <button onclick={()=>changeCategory(videoNews, 'ទំព័រ​ដើម', data?.news)} class='center'>ទំព័រ​ដើម</button>
+                    <button onclick={()=>changeCategory(videoNewsNews, 'ព័ត៌មាន', data?.news)} class='center'>ព័ត៌មាន</button>
                     <button onclick={()=>nextPrevious('previous')}>វីដេអូមុន</button>
                     <button onclick={newPlaylist} class='new-playlist'>ដូរ​កំរង​វីដេអូ​</button>
                     <button onclick={()=>nextPrevious('next')}>វីដេអូបន្ទាប់</button>
