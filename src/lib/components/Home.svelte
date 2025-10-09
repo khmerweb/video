@@ -37,7 +37,7 @@
         player = new YT.Player(ytPlayerId, {
             height: '390',
             width: '640',
-            videoId: initialVideoId,
+            videoId: laodingVideo,
             playerVars: {
                 'playsinline': 1,
                 "enablejsapi": 1,
@@ -345,7 +345,6 @@
     </div>
     <Ad />
 </section>
-
 
 <section class="Home region">
     <div class="container">
