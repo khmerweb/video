@@ -4,25 +4,23 @@
     //let { data } = $props()
     import Layout from '$lib/components/Layout.svelte'
     import Home from "$lib/components/Home.svelte"
+	import { loadDatabase } from '$lib/db/db.svelte.js';
 
-    let data = $state({});
+    let data = $state(null);
+    let formattedData = $state([]);
+    let load = $state(false);
     
     let categories = ['movie','travel','simulation','sport','documentary','food','music','game','news'];
-    $effect(()=>{
-        if(dbStore.db.length > 0){
-            for(let category of categories){
-                let posts = dbStore.db.filter(post => post.categories.includes(category));
-                data[category] = posts;
-            }
-            data.lastPage = Math.ceil(dbStore.db.length/20);
-            
-            data.currentPage = 1;
+    $effect( ()=>{
+        if(!load){
+            data = loadDatabase(categories);
+            load = true;
         }
     });
     
 </script>
-
-<Layout { data } >
-    <Home { data } />
+{#if dbStore.data}
+<Layout data ={ dbStore.data } >
+    <Home data ={ dbStore.data } />
 </Layout>
-    
+{/if}

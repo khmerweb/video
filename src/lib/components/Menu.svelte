@@ -8,7 +8,7 @@ let Node_js = $state('')
 let Python = $state('')
 let Multimedia = $state('')
 let contact = $state('')
-
+/*
 if(data.pageURL === '/'){
     home = 'active'
 }else if(data.pageURL === 'Node.js'){
@@ -20,7 +20,7 @@ if(data.pageURL === '/'){
 }else if(data.pageURL === 'contact'){
     contact = 'active'
 }
-
+*/
 
 function myFunction() {
   isresponsive = !isresponsive

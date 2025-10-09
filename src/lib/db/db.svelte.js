@@ -1,41 +1,60 @@
 // src/lib/db/db.js
 import MyWorker from '$lib/db/myworker.js?worker';
 import { dbStore } from '../store/state.svelte.js';
-let worker;
+let worker
 let queryResult = $state(null);
 let errorMessage = $state(null);
 let formattedData = $state([]);
 
-export async function loadDatabase() {
+export function loadDatabase(categories) {
     const worker = new MyWorker();
+    
     worker.onmessage = async (event) => {
-        const { type, results, error } = await event.data;
+        const { type, db, results, error, category } = await event.data;
                 
         if (type === 'init_success') {
             console.log('Database initialized in worker');
-            worker.postMessage({ type: 'query', payload: { sql: 'SELECT * FROM Post' } });
+            dbStore.db = db;
+            if(categories){
+                worker.postMessage({ categories, type: 'query' });
+            }
+            
         } else if (type === 'init_error') {
             errorMessage = `Worker initialization failed: ${error}`;
         } else if (type === 'query_success') {
             queryResult = await results;
-            
-            const columns = queryResult[0].columns;
-            const values = queryResult[0].values;
-            formattedData = values.map((row) => {
-                const rowObject = {};
-                columns.forEach((colName, index) => {
-                    rowObject[colName] = row[index];
-                });
-                return rowObject;
-            });
-            if(dbStore.db.length === 0){
-                dbStore.db = formattedData;
+            if(category){
+                const posts = {}
+                for(let i in categories){
+                    const columns = queryResult[i][0].columns;
+                    const values = queryResult[i][0].values;
+                    posts[categories[i]] = (values.map((row) => {
+                        const rowObject = {};
+                        columns.forEach((colName, index) => {
+                            rowObject[colName] = row[index];
+                        });
+                        return rowObject;
+                    }));
+                }
+                formattedData = posts;
+            }else{
+                const columns = queryResult[0].columns;
+                const values = queryResult[0].values;
+                formattedData.push(values.map((row) => {
+                    const rowObject = {};
+                    columns.forEach((colName, index) => {
+                        rowObject[colName] = row[index];
+                    });
+                    return rowObject;
+                }));
             }
-            
+            dbStore.data = formattedData;
             worker.terminate();
+            
         } else if (type === 'query_error') {
             errorMessage = `Query failed: ${error}`;
         }
+        
     }
         
            
@@ -48,11 +67,7 @@ export async function loadDatabase() {
     };
 
     worker.postMessage({ type: 'init', payload: { dbPath: `${getBasePath()}database.sqlite` }, basePath: getBasePath() });
-
-    return formattedData;
+    if(formattedData !== []){
+        return formattedData;
+    }
 }
-
-export function executeSqlInWorker(sql) {
-    
-}
-

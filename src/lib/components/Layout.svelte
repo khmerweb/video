@@ -7,7 +7,7 @@
 </script>
 
 <svelte:head>
-    <title>{ data.title }</title>
+    <title>Test</title>
     <link href="/fonts/setup.css" rel="stylesheet" />
     <link href="/styles/base-frontend.css" rel="stylesheet" />
 </svelte:head>
@@ -15,6 +15,6 @@
 <Header { data } />
 <Menu { data } />
 <Ad />
-<img style='display:none;' src={data.thumb} alt='' />
+
 {@render children()}
 <Footer />
