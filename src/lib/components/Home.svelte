@@ -1,7 +1,7 @@
 <script>
     import Ad from "$lib/components/Ad.svelte"
     import jq from 'jquery';
-//
+
     let { data } = $props();
     let posts = $state(data?.news);
     const dark = 'brightness(20%)'
