@@ -6,8 +6,7 @@
     import Home from "$lib/components/Home.svelte"
 	import { loadDatabase } from '$lib/db/db.svelte.js';
 
-    let data = $state(null);
-    let formattedData = $state([]);
+    let data = $state([]);
     let load = $state(false);
     
     let categories = ['movie','travel','simulation','sport','documentary','food','music','game','news'];
@@ -19,8 +18,7 @@
     });
     
 </script>
-{#if dbStore.data}
+
 <Layout data ={ dbStore.data } >
     <Home data ={ dbStore.data } />
 </Layout>
-{/if}

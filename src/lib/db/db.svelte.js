@@ -35,6 +35,7 @@ export function loadDatabase(categories) {
                         });
                         return rowObject;
                     }));
+                    posts[categories[i]].count = queryResult[i].count;
                 }
                 formattedData = posts;
             }else{

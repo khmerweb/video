@@ -25,7 +25,11 @@ self.onmessage = async (event) => {
                     let results = []
                     for(let category of categories){
                         const sql = `SELECT * FROM Post WHERE categories LIKE '%${category}%' ORDER BY RANDOM() LIMIT 20`;
-                        results.push(db.exec(sql));
+                        const posts = db.exec(sql);
+                        const res = db.exec(`SELECT COUNT(*) FROM Post WHERE categories LIKE '%${category}%'`);
+                        const rowCount = res[0].values[0][0];
+                        posts.count = rowCount;
+                        results.push(posts)
                     }
                     self.postMessage({ type: 'query_success', results, category: true });
                 }catch (error) {
