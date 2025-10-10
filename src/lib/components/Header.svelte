@@ -35,7 +35,7 @@
             </a>
             <div class='title-wrapper'>
                 <a class="title" href='/' aria-label="title">
-                    <h1>ខ្មែរ​សម័យ​ថ្មី</h1>
+                    <h1>ខ្មែរវីដេអូ​</h1>
                 </a>
             </div>
         </div>

@@ -3,7 +3,7 @@ import initSqlJs from 'sql.js';
 let db = null;
 
 self.onmessage = async (event) => {
-    const { type, payload, basePath, categories } = event.data;
+    const { type, payload, basePath, arg, kind, thumb } = event.data;
     
     switch (type) {
         case 'init':
@@ -14,16 +14,16 @@ self.onmessage = async (event) => {
                 const response = await fetch(payload.dbPath);
                 const buffer = await response.arrayBuffer();
                 db = new SQL.Database(new Uint8Array(buffer));
-                self.postMessage({ type: 'init_success', db });
+                self.postMessage({ type: 'init_success' });
             } catch (error) {
                 self.postMessage({ type: 'init_error', error: error.message });
             }
             break;
         case 'query':
-            if(categories){
+            if(kind === 'front'){
                 try{
                     let results = []
-                    for(let category of categories){
+                    for(let category of arg){
                         if(category === 'home'){
                             const sql = `SELECT * FROM Post WHERE categories NOT LIKE '%news%' ORDER BY RANDOM() LIMIT 20`;
                             const posts = db.exec(sql);
@@ -47,8 +47,24 @@ self.onmessage = async (event) => {
                             results.push(posts);
                         }
                     }
-                    self.postMessage({ type: 'query_success', results, categories_: true });
+                    self.postMessage({ type: 'query_success', results, _kind: 'front' });
                 }catch (error) {
+                    self.postMessage({ type: 'query_error', error: error.message });
+                }
+            }else if(kind === 'random'){
+                try {
+                    let results = []
+                    if(arg === 'home'){
+                        const sql = `SELECT * FROM Post WHERE categories NOT LIKE '%news%' ORDER BY RANDOM() LIMIT 20`;
+                        results = db.exec(sql);
+                        
+                    
+                    }else{
+                        const sql = `SELECT * FROM Post WHERE categories LIKE '%${arg}%' ORDER BY RANDOM() LIMIT 20`;
+                        results = db.exec(sql);
+                    }
+                    self.postMessage({ type: 'query_success', results, _kind: 'random' });
+                } catch (error){
                     self.postMessage({ type: 'query_error', error: error.message });
                 }
             }else{

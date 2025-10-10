@@ -1,9 +1,10 @@
 <script>
-    import Ad from "$lib/components/Ad.svelte"
+    import Ad from "$lib/components/Ad.svelte";
     import jq from 'jquery';
+    import { loadDatabase } from '$lib/db/db.svelte.js';
 
     let { data } = $props();
-    let posts = $state(data?.news);
+    let posts = $state(data?.posts.news);
     const dark = 'brightness(20%)'
     const normal = 'brightness(100%)'
     const laodingVideo = 'NcQQVbioeZk'
@@ -258,29 +259,33 @@
         }
     }
 
+    async function getRandomPlaylist(category, thumbs){
+		const data = await loadDatabase(category, 'random', thumbs);
+        posts = data.posts
+        data.posts[category] = data.posts
+        //playlistThumbs[category] = data.posts[0].thumb
+        let newPlaylist = parseVideos(data.posts)
+        newPlaylist.category = category
+        //videoPlaylists[category] = newPlaylist
+        return newPlaylist
+	}
+
 
     $effect(()=>{
-        if(data?.news){
-            posts = data.home;
-            videoHome = parseVideos(data.home);
-            videoMovie = parseVideos(data.movie);
-            videoTravel = parseVideos(data.travel);
-            videoSimulation = parseVideos(data.simulation);
-            videoSport = parseVideos(data.sport);
-            videoDocumentary = parseVideos(data.documentary);
-            videoFood = parseVideos(data.food);
-            videoMusic = parseVideos(data.music);
-            videoGame = parseVideos(data.game);
-            videoNews = parseVideos(data.news);
+        if(data?.posts.news){
+            posts = data.posts.home;
+            videoHome = parseVideos(data.posts.home);
+            videoMovie = parseVideos(data.posts.movie);
+            videoTravel = parseVideos(data.posts.travel);
+            videoSimulation = parseVideos(data.posts.simulation);
+            videoSport = parseVideos(data.posts.sport);
+            videoDocumentary = parseVideos(data.posts.documentary);
+            videoFood = parseVideos(data.posts.food);
+            videoMusic = parseVideos(data.posts.music);
+            videoGame = parseVideos(data.posts.game);
+            videoNews = parseVideos(data.posts.news);
+            window.onYouTubeIframeAPIReady = load
         };
-
-        window.YT?.ready(function() {
-            if (window.YT) {
-                load()
-            } else {
-                window.onYouTubeIframeAPIReady = load
-            }
-        })
     });
 
     
@@ -294,44 +299,44 @@
 <section class="main region">
     <div class="feature-post">
         <div class="random-video">
-            <button  onclick={()=>changeCategory(videoMovie, 'ភាពយន្ត​​​', data?.movie, 1)}>
+            <button  onclick={()=>changeCategory(videoMovie, 'ភាពយន្ត​​​', data.posts.movie, 1)}>
                 <img alt='' src={(videoMovie?.thumbs ?? [])[0] || './images/loading.gif'} />
-                <p class="news-label">{data.movie?.count} ភាពយន្ត</p>
+                <p class="news-label">{data.posts.movie?.count} ភាពយន្ត</p>
                 <span class='playing'>កំពុង​លេង...</span>
             </button>
-            <button onclick={()=>changeCategory(videoTravel, 'ដើរ​លេង​​​​​', data?.travel, 2)}>
+            <button onclick={()=>changeCategory(videoTravel, 'ដើរ​លេង​​​​​', data?.posts.travel, 2)}>
                 <img alt='' src={(videoTravel?.thumbs ?? [])[0] || './images/loading.gif'} />
-                <p class="movies-label">{data.travel?.count} ដើរ​លេង</p>
+                <p class="movies-label">{data.posts.travel?.count} ដើរ​លេង</p>
                 <span class='playing'>កំពុង​លេង...</span>
             </button>
-            <button onclick={()=>changeCategory(videoSimulation, '​ពិភព​និម្មិត​', data?.simulation, 3)}>
+            <button onclick={()=>changeCategory(videoSimulation, '​ពិភព​និម្មិត​', data?.posts.simulation, 3)}>
                 <img alt='' src={(videoSimulation?.thumbs ?? [])[0] || './images/loading.gif'} />
-                <p class="movies-label">{data.simulation?.count} ពិភព​និម្មិត</p>
+                <p class="movies-label">{data.posts.simulation?.count} ពិភព​និម្មិត</p>
                 <span class='playing'>កំពុង​លេង...</span>
             </button>
-            <button onclick={()=>changeCategory(videoSport, '​កីឡា​​​', data?.sport, 4)}>
+            <button onclick={()=>changeCategory(videoSport, '​កីឡា​​​', data?.posts.sport, 4)}>
                 <img alt='' src={(videoSport?.thumbs ?? [])[0] || './images/loading.gif'} />
-                <p class="movies-label">{data.sport?.count} កីឡា</p>
+                <p class="movies-label">{data.posts.sport?.count} កីឡា</p>
                 <span class='playing'>កំពុង​លេង...</span>
             </button>
-            <button onclick={()=>changeCategory(videoDocumentary, '​ឯកសារ​​​​​', data?.documentary, 5)}>
+            <button onclick={()=>changeCategory(videoDocumentary, '​ឯកសារ​​​​​', data?.posts.documentary, 5)}>
                 <img alt='' src={(videoDocumentary?.thumbs ?? [])[0] || './images/loading.gif'} />
-                <p class="movies-label">{data.documentary?.count} ​ឯកសារ</p>
+                <p class="movies-label">{data.posts.documentary?.count} ​ឯកសារ</p>
                 <span class='playing'>កំពុង​លេង...</span>
             </button>
-            <button onclick={()=>changeCategory(videoFood, 'មុខ​ម្ហូប​​​​', data?.food, 6)}>
+            <button onclick={()=>changeCategory(videoFood, 'មុខ​ម្ហូប​​​​', data?.posts.food, 6)}>
                 <img alt='' src={(videoFood?.thumbs ?? [])[0] || './images/loading.gif'} />
-                <p class="news-label">{data.food?.count} ​មុខ​ម្ហូប</p>
+                <p class="news-label">{data.posts.food?.count} ​មុខ​ម្ហូប</p>
                 <span class='playing'>កំពុង​លេង...</span>
             </button>
-            <button onclick={()=>changeCategory(videoMusic, 'របាំ​តន្ត្រី​​​​​', data?.music, 7)}>
+            <button onclick={()=>changeCategory(videoMusic, 'របាំ​តន្ត្រី​​​​​', data?.posts.music, 7)}>
                 <img alt='' src={(videoMusic?.thumbs ?? [])[0] || './images/loading.gif'} />
-                <p class="news-label">{data.music?.count} របាំ​តន្ត្រី</p>
+                <p class="news-label">{data.posts.music?.count} របាំ​តន្ត្រី</p>
                 <span class='playing'>កំពុង​លេង...</span>
             </button>
-            <button onclick={()=>changeCategory(videoGame, 'ល្បែងកំសាន្ត​​​​', data?.game, 8)}>
+            <button onclick={()=>changeCategory(videoGame, 'ល្បែងកំសាន្ត​​​​', data?.posts.game, 8)}>
                 <img alt='' src={(videoGame?.thumbs ?? [])[0] || './images/loading.gif'} />
-                <p class="news-label">{data.game?.count} ល្បែងកំសាន្ត</p>
+                <p class="news-label">{data.posts.game?.count} ល្បែងកំសាន្ត</p>
                 <span class='playing'>កំពុង​លេង...</span>
             </button>
             <div class="wrapper">
@@ -341,8 +346,8 @@
                     <img src="/images/siteLogo.png" alt=''/>
                 </div>
                 <div class="play-all">
-                    <button onclick={()=>changeCategory(videoHome, 'ទំព័រ​ដើម', data?.home)} class='center'>ទំព័រ​ដើម</button>
-                    <button onclick={()=>changeCategory(videoNews, 'ព័ត៌មាន', data?.news)} class='center'>ព័ត៌មាន</button>
+                    <button onclick={()=>changeCategory(videoHome, 'ទំព័រ​ដើម', data?.posts.home)} class='center'>ទំព័រ​ដើម</button>
+                    <button onclick={()=>changeCategory(videoNews, 'ព័ត៌មាន', data?.posts.news)} class='center'>ព័ត៌មាន</button>
                     <button onclick={()=>nextPrevious('previous')}>វីដេអូមុន</button>
                     <button onclick={newPlaylist} class='new-playlist'>ដូរ​កំរង​វីដេអូ​</button>
                     <button onclick={()=>nextPrevious('next')}>វីដេអូបន្ទាប់</button>

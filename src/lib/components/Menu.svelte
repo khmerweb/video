@@ -1,31 +1,48 @@
-<!--src/layouts/Menu.astro-->
 <script>
 let { data } = $props()
 let isresponsive = $state(false)
 
 let home = $state('')
-let Node_js = $state('')
-let Python = $state('')
-let Multimedia = $state('')
+let news = $state('')
+let opinion = $state('')
+let documentary = $state('')
+let sport = $state('')
+let movie = $state('')
+let travel = $state('')
 let contact = $state('')
-/*
+let about = $state('')
+let simulation = $state('')
+let entertainment = $state('')
+
 if(data.pageURL === '/'){
     home = 'active'
-}else if(data.pageURL === 'Node.js'){
-    Node_js = 'active'
-}else if(data.pageURL === 'Python'){
-    Python = 'active'
-}else if(data.pageURL === 'Multimedia'){
-    Multimedia = 'active'
+}else if(data.pageURL === 'news'){
+    news = 'active'
+}else if(data.pageURL === 'opinion'){
+  opinion = 'active'
+}else if(data.pageURL === 'documentary'){
+  documentary = 'active'
+}else if(data.pageURL === 'sport'){
+    sport = 'active'
+}else if(data.pageURL === 'movie'){
+    movie = 'active'
+}else if(data.pageURL === 'trvel'){
+    travel = 'active'
 }else if(data.pageURL === 'contact'){
     contact = 'active'
+}else if(data.pageURL === 'about'){
+    about = 'active'
+}else if(data.pageURL === 'travel'){
+    travel = 'active'
+}else if(data.pageURL === 'simulation'){
+  simulation = 'active'
+}else if(data.pageURL === 'entertainment'){
+  entertainment = 'active'
 }
-*/
 
 function myFunction() {
   isresponsive = !isresponsive
 }
-
 </script>
 
 <section class='menu'>
@@ -33,12 +50,46 @@ function myFunction() {
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <div class="region">
             <div data-sveltekit-reload class="topnav" class:responsive={isresponsive} id="myTopnav">
-                <a href="/" class="home {home}">Home</a>
-                <a href="/Node.js/1" class={`Node_js ${Node_js}`}>Node.js</a>
-                <a href="/Python/1" class={`Python ${Python}`}>Python</a>
-                <a href="/Multimedia/1" class={`Multimedia ${Multimedia}`}>Multimedia</a>
-                <a href="/page/46644228" class={`contact ${contact}`}>Contact</a>
-                
+                <a href="/" class={`home ${home}`}>ទំព័រ​ដើម</a>
+                <div class={`dropdown ${news}`}>
+                  <button class={`dropbtn `}>ព័ត៌មាន
+                    <i class="fa fa-caret-down"></i>
+                  </button>
+                  <div class="dropdown-content">
+                    <a href="/national/1">ក្នុង​ប្រទេស</a>
+                    <a href="/global/1">ក្រៅ​ប្រទេស</a>
+                  </div>
+                </div>
+                <a href="/opinion/1" class={`opinion ${opinion}`}>មតិ​យោបល់</a>
+                <a href="/documentary/1" class={`documentary ${documentary}`}>ឯកសារ</a>
+                <a href="/sport/1" class={`sport ${sport}`}>កីឡា</a>
+                <div class={`dropdown ${movie}`}>
+                  <button class={`dropbtn `}>ភាពយន្ត
+                    <i class="fa fa-caret-down"></i>
+                  </button>
+                  <div class="dropdown-content">
+                    <a href="/Khmer/1">រឿង​ខ្មែរ</a>
+                    <a href="/Thai/1">រឿង​ថៃ</a>
+                    <a href="/Chinese/1">រឿង​ចិន</a>
+                    <a href="/Korean/1">រឿង​កូរ៉េ</a>
+                    <a href="/world/1">​រឿង​បរទេស</a>
+                    <a href="/movie/1">​ឥត​ព្រៀង​ទុក</a>
+                  </div>
+                </div>
+                <a href="/travel/1" class={`travel ${travel}`}>ដើរ​លេង</a>
+                <a href="/simulation/1" class={`simulation ${simulation}`}>ពិភព​និមិ្មត</a>
+                <div class={`dropdown ${entertainment}`}>
+                  <button class={`dropbtn `}>កំសាន្ត
+                    <i class="fa fa-caret-down"></i>
+                  </button>
+                  <div class="dropdown-content">
+                    <a href="/food/1">មុខ​ម្ហូប</a>
+                    <a href="/music/1">របាំ​តន្ត្រី</a>
+                    <a href="/game/1">ល្បែង​កំសាន្ត</a>
+                  </div>
+                </div>
+                <a href="/page/kLbYmi8rE1" class={`contact ${contact}`}>ទំនាក់ទំនង</a>
+                <a href="/page/rZuVKlXNb8" class={`about ${about}`}>អំពីយើង​ខ្ញុំ</a>
                 <a href="javascript:void(0);" class="icon" onclick={myFunction}>
                     <i class="fa fa-bars"></i>
                 </a>
@@ -58,19 +109,18 @@ nav{
   .topnav a {
     float: left;
     display: block;
+    color: black;
     text-align: center;
     padding: 9px 16px;
     text-decoration: none;
-    font-size: 18px;
-    font-family: Oswald, Koulen;
-    color: black;
+    font-size: 14px;
   }
   .topnav a:hover {
-    background-color: rgb(44, 44, 44);
+    background-color: var(--background-dark);
     color: white;
   }
-  .topnav a.active, div.active, .dropbtn.active {
-    background-color: rgb(44, 44, 44);
+  .topnav a.active, div.active {
+    background-color: var(--background-dark);
     color: white;
   }
   .topnav .icon {
@@ -84,6 +134,7 @@ nav{
   font-size: 14px;
   border: none;
   outline: none;
+  color: black;
   padding: 7px 16px;
   background-color: inherit;
   font-family: inherit;
@@ -99,6 +150,7 @@ nav{
 }
 .dropdown-content a {
   float: none;
+  color: black;
   padding: 9px 16px;
   text-decoration: none;
   display: block;
