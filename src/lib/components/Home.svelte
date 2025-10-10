@@ -8,6 +8,7 @@
     const normal = 'brightness(100%)'
     const laodingVideo = 'NcQQVbioeZk'
 
+    let videoHome = $state([]);
     let videoMovie = $state([]);
     let videoTravel = $state([]);
     let videoSimulation = $state([]);
@@ -25,6 +26,7 @@
             videos.push(JSON.parse(post.videos))
             thumbs.push(post.thumb)
         }
+        videos.category = posts.category;
         videos.thumbs = thumbs
         return videos
     }
@@ -70,8 +72,8 @@
         player.index = 0
         player.thumb = 1
         player.label = 'ទំព័រ​ដើម'
-        player.playlist = videoNews; 
-        loadVideo(videoNews )
+        player.playlist = videoHome; 
+        loadVideo(videoHome)
     }
 
     async function onPlayerStateChange(event) {   
@@ -176,7 +178,7 @@
 
     async function newPlaylist(){
         player.unMute()
-        player.loadVideoById(laodingVideo)
+        player.loadVideoById(laodingVideo);
         if(player.playlist.category !== 'news'){
             player.playlist = await getRandomPlaylist(player.playlist.category, player.playlist.thumbs) 
         }
@@ -259,7 +261,8 @@
 
     $effect(()=>{
         if(data?.news){
-            posts = data.news;
+            posts = data.home;
+            videoHome = parseVideos(data.home);
             videoMovie = parseVideos(data.movie);
             videoTravel = parseVideos(data.travel);
             videoSimulation = parseVideos(data.simulation);
@@ -333,8 +336,8 @@
                     <img src="/images/siteLogo.png" alt=''/>
                 </div>
                 <div class="play-all">
-                    <button onclick={()=>changeCategory(videoNews, 'ទំព័រ​ដើម', data?.news)} class='center'>ទំព័រ​ដើម</button>
-                    <button onclick={()=>changeCategory(videoNewsNews, 'ព័ត៌មាន', data?.news)} class='center'>ព័ត៌មាន</button>
+                    <button onclick={()=>changeCategory(videoHome, 'ទំព័រ​ដើម', data?.home)} class='center'>ទំព័រ​ដើម</button>
+                    <button onclick={()=>changeCategory(videoNews, 'ព័ត៌មាន', data?.news)} class='center'>ព័ត៌មាន</button>
                     <button onclick={()=>nextPrevious('previous')}>វីដេអូមុន</button>
                     <button onclick={newPlaylist} class='new-playlist'>ដូរ​កំរង​វីដេអូ​</button>
                     <button onclick={()=>nextPrevious('next')}>វីដេអូបន្ទាប់</button>
@@ -492,6 +495,10 @@
         width: 100%;
         display: block;
         border: none;
+    }
+    .Home .container .wrapper button:hover{
+        cursor: pointer;
+        opacity: .7;
     }
     .Home .container .wrapper .title{
         padding-top: 5px !important;

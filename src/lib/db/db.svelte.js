@@ -6,11 +6,11 @@ let queryResult = $state(null);
 let errorMessage = $state(null);
 let formattedData = $state([]);
 
-export function loadDatabase(categories) {
+export function loadDatabase(base, categories) {
     const worker = new MyWorker();
     
     worker.onmessage = async (event) => {
-        const { type, db, results, error, category } = await event.data;
+        const { type, db, results, error, categories_ } = await event.data;
                 
         if (type === 'init_success') {
             console.log('Database initialized in worker');
@@ -23,7 +23,7 @@ export function loadDatabase(categories) {
             errorMessage = `Worker initialization failed: ${error}`;
         } else if (type === 'query_success') {
             queryResult = await results;
-            if(category){
+            if(categories_){
                 const posts = {}
                 for(let i in categories){
                     const columns = queryResult[i][0].columns;
@@ -36,6 +36,7 @@ export function loadDatabase(categories) {
                         return rowObject;
                     }));
                     posts[categories[i]].count = queryResult[i].count;
+                    posts[categories[i]].category = categories[i];
                 }
                 formattedData = posts;
             }else{
@@ -67,7 +68,7 @@ export function loadDatabase(categories) {
         return '/'; 
     };
 
-    worker.postMessage({ type: 'init', payload: { dbPath: `${getBasePath()}database.sqlite` }, basePath: getBasePath() });
+    worker.postMessage({ type: 'init', payload: { dbPath: `${base}/database.sqlite` }, basePath: base });
     if(formattedData !== []){
         return formattedData;
     }

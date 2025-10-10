@@ -9,10 +9,10 @@
     let data = $state([]);
     let load = $state(false);
     
-    let categories = ['movie','travel','simulation','sport','documentary','food','music','game','news'];
+    let categories = ['home','movie','travel','simulation','sport','documentary','food','music','game','news'];
     $effect( ()=>{
         if(!load){
-            data = loadDatabase(categories);
+            data = loadDatabase(base, categories);
             load = true;
         }
     });

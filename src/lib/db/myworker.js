@@ -9,7 +9,7 @@ self.onmessage = async (event) => {
         case 'init':
             try {
                 const SQL = await initSqlJs({
-                    locateFile: file => `${basePath}${file}` 
+                    locateFile: file => `${basePath}/${file}` 
                 });
                 const response = await fetch(payload.dbPath);
                 const buffer = await response.arrayBuffer();
@@ -24,14 +24,30 @@ self.onmessage = async (event) => {
                 try{
                     let results = []
                     for(let category of categories){
-                        const sql = `SELECT * FROM Post WHERE categories LIKE '%${category}%' ORDER BY RANDOM() LIMIT 20`;
-                        const posts = db.exec(sql);
-                        const res = db.exec(`SELECT COUNT(*) FROM Post WHERE categories LIKE '%${category}%'`);
-                        const rowCount = res[0].values[0][0];
-                        posts.count = rowCount;
-                        results.push(posts)
+                        if(category === 'home'){
+                            const sql = `SELECT * FROM Post WHERE categories NOT LIKE '%news%' ORDER BY RANDOM() LIMIT 20`;
+                            const posts = db.exec(sql);
+                            const res = db.exec(`SELECT COUNT(*) FROM Post`);
+                            const rowCount = res[0].values[0][0];
+                            posts.count = rowCount;
+                            results.push(posts);
+                        }else if(category === 'news'){
+                            const sql = `SELECT * FROM Post WHERE categories LIKE '%${category}%' ORDER BY date DESC LIMIT 20`;
+                            const posts = db.exec(sql);
+                            const res = db.exec(`SELECT COUNT(*) FROM Post WHERE categories LIKE '%${category}%'`);
+                            const rowCount = res[0].values[0][0];
+                            posts.count = rowCount;
+                            results.push(posts);
+                        }else{
+                            const sql = `SELECT * FROM Post WHERE categories LIKE '%${category}%' ORDER BY RANDOM() LIMIT 20`;
+                            const posts = db.exec(sql);
+                            const res = db.exec(`SELECT COUNT(*) FROM Post WHERE categories LIKE '%${category}%'`);
+                            const rowCount = res[0].values[0][0];
+                            posts.count = rowCount;
+                            results.push(posts);
+                        }
                     }
-                    self.postMessage({ type: 'query_success', results, category: true });
+                    self.postMessage({ type: 'query_success', results, categories_: true });
                 }catch (error) {
                     self.postMessage({ type: 'query_error', error: error.message });
                 }
