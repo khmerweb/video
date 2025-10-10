@@ -284,7 +284,7 @@
             videoMusic = parseVideos(data.posts.music);
             videoGame = parseVideos(data.posts.game);
             videoNews = parseVideos(data.posts.news);
-            window.onYouTubeIframeAPIReady = load
+            window.onYouTubeIframeAPIReady = load;
         };
     });
 

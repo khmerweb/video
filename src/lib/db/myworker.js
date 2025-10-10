@@ -31,6 +31,7 @@ self.onmessage = async (event) => {
                             const rowCount = res[0].values[0][0];
                             posts.count = rowCount;
                             results.push(posts);
+                            
                         }else if(category === 'news'){
                             const sql = `SELECT * FROM Post WHERE categories LIKE '%${category}%' ORDER BY date DESC LIMIT 20`;
                             const posts = db.exec(sql);
@@ -38,6 +39,7 @@ self.onmessage = async (event) => {
                             const rowCount = res[0].values[0][0];
                             posts.count = rowCount;
                             results.push(posts);
+                            
                         }else{
                             const sql = `SELECT * FROM Post WHERE categories LIKE '%${category}%' ORDER BY RANDOM() LIMIT 20`;
                             const posts = db.exec(sql);
@@ -45,6 +47,7 @@ self.onmessage = async (event) => {
                             const rowCount = res[0].values[0][0];
                             posts.count = rowCount;
                             results.push(posts);
+                            
                         }
                     }
                     self.postMessage({ type: 'query_success', results, _kind: 'front' });
@@ -52,15 +55,15 @@ self.onmessage = async (event) => {
                     self.postMessage({ type: 'query_error', error: error.message });
                 }
             }else if(kind === 'random'){
+                const thumbs = JSON.parse(thumb);
+                const thumbsStr = thumbs.map(name => `'${name}'`).join(',');
                 try {
                     let results = []
                     if(arg === 'home'){
-                        const sql = `SELECT * FROM Post WHERE categories NOT LIKE '%news%' ORDER BY RANDOM() LIMIT 20`;
+                        const sql = `SELECT * FROM Post WHERE thumb NOT IN (${thumbsStr}) AND categories NOT LIKE '%news%' ORDER BY RANDOM() LIMIT 20;`;
                         results = db.exec(sql);
-                        
-                    
                     }else{
-                        const sql = `SELECT * FROM Post WHERE categories LIKE '%${arg}%' ORDER BY RANDOM() LIMIT 20`;
+                        const sql = `SELECT * FROM Post WHERE categories LIKE '%${arg}%' AND thumb NOT IN (${thumbsStr}) ORDER BY RANDOM() LIMIT 20`;
                         results = db.exec(sql);
                     }
                     self.postMessage({ type: 'query_success', results, _kind: 'random' });

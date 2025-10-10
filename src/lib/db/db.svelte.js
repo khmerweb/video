@@ -8,7 +8,6 @@ let errorMessage = $state(null);
 
 export function loadDatabase(arg, kind, thumbs=[]) {
     worker = new MyWorker();
-    
     return new Promise((resolve, reject) => {
         worker.onmessage = async (event) => {
             const { type, results, error, _kind } = await event.data;
@@ -41,7 +40,6 @@ export function loadDatabase(arg, kind, thumbs=[]) {
                     const lastPage = Math.ceil(posts.home.count / 20);
                     resolve({ posts, pageURL, currentPage, lastPage });
                 }else if(_kind === 'random'){
-                    
                     const columns = queryResult[0].columns;
                     const values = queryResult[0].values;
                     const posts = (values.map((row) => {
