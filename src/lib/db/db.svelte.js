@@ -58,15 +58,6 @@ export function loadDatabase(base, categories) {
         }
         
     }
-        
-           
-    const getBasePath = () => {
-        const pathParts = window.location.pathname.split('/');
-        if (pathParts.length > 1 && pathParts[1] === 'video') {
-            return `/${pathParts[1]}/`;
-        }
-        return '/'; 
-    };
 
     worker.postMessage({ type: 'init', payload: { dbPath: `${base}/database.sqlite` }, basePath: base });
     if(formattedData !== []){

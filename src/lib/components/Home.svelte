@@ -274,8 +274,13 @@
             videoNews = parseVideos(data.news);
         };
 
-        window.onYouTubeIframeAPIReady = load;
-
+        window.YT?.ready(function() {
+            if (window.YT) {
+                load()
+            } else {
+                window.onYouTubeIframeAPIReady = load
+            }
+        })
     });
 
     
