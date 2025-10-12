@@ -11,7 +11,8 @@ self.onmessage = async (event) => {
                 const SQL = await initSqlJs({
                     locateFile: file => `${basePath}/${file}` 
                 });
-                const response = await fetch(payload.dbPath, {headers: {"Cache-Control": "max-age=86400"}});
+                //{headers: {"Cache-Control": "max-age=7200"}}
+                const response = await fetch(payload.dbPath, {headers: {"Cache-Control": "max-age=7200"}});
                 const buffer = await response.arrayBuffer();
                 db = new SQL.Database(new Uint8Array(buffer));
                 self.postMessage({ type: 'init_success' });
