@@ -12,7 +12,7 @@ self.onmessage = async (event) => {
                     locateFile: file => `${basePath}/${file}` 
                 });
                 //{headers: {"Cache-Control": "max-age=7200"}}
-                const response = await fetch(payload.dbPath, {headers: {"Cache-Control": "max-age=7200"}});
+                const response = await fetch(payload.dbPath);
                 const buffer = await response.arrayBuffer();
                 db = new SQL.Database(new Uint8Array(buffer));
                 self.postMessage({ type: 'init_success' });
