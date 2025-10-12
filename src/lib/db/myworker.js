@@ -11,11 +11,13 @@ self.onmessage = async (event) => {
                 const SQL = await initSqlJs({
                     locateFile: file => `${basePath}/${file}` 
                 });
-                //{headers: {"Cache-Control": "max-age=7200"}}
-                const response = await fetch(payload.dbPath);
-                const buffer = await response.arrayBuffer();
-                db = new SQL.Database(new Uint8Array(buffer));
-                self.postMessage({ type: 'init_success' });
+                
+                if(!db){
+                    const response = await fetch(payload.dbPath, {opfs: true});
+                    const buffer = await response.arrayBuffer();
+                    db = new SQL.Database(new Uint8Array(buffer));
+                    self.postMessage({ type: 'init_success' });
+                }
             } catch (error) {
                 self.postMessage({ type: 'init_error', error: error.message });
             }

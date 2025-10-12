@@ -2,12 +2,15 @@
 import { base } from '$app/paths';
 import MyWorker from '$lib/db/myworker.js?worker';
 import { dbStore } from '../store/state.svelte.js';
-let worker
+let worker = $state(null);
 let queryResult = $state(null);
 let errorMessage = $state(null);
 
 export function loadDatabase(arg, kind, thumbs=[]) {
-    worker = new MyWorker();
+    if(!worker){
+        worker = new MyWorker();
+    }
+    
     return new Promise((resolve, reject) => {
         worker.onmessage = async (event) => {
             const { type, results, error, _kind } = await event.data;
@@ -53,7 +56,7 @@ export function loadDatabase(arg, kind, thumbs=[]) {
                     resolve({ posts });
                 }
 
-            worker.terminate();
+            //worker.terminate();
 
             } else if (type === 'query_error') {
                 errorMessage = `Query failed: ${error}`;
