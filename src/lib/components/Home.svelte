@@ -2,7 +2,6 @@
     import Ad from "$lib/components/Ad.svelte"
     import jq from 'jquery'
     let { data } = $props()
-    console.log(data.latestPosts)
     let posts = $state(data.latestPosts)
     const dark = 'brightness(20%)'
     const normal = 'brightness(100%)'
@@ -334,6 +333,7 @@
     }
         
     $effect(() => {
+        window.onYouTubeIframeAPIReady = load
         window.YT?.ready(function() {
             if (window.YT) {
                 load()
