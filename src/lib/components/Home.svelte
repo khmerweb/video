@@ -332,15 +332,11 @@
         })
     }
         
-    $effect(() => {
+    $effect(async () => {
         window.onYouTubeIframeAPIReady = load
-        window.YT?.ready(function() {
-            if (window.YT) {
-                load()
-            } else {
-                window.onYouTubeIframeAPIReady = load
-            }
-        })
+        const response = await fetch('https://khmertuber.netlify.app/api');
+        const data = await response.json()
+        alert(data)
     })
 </script>
 
