@@ -9,7 +9,7 @@
 <svelte:head>
     <title>Test</title>
     <link href="/fonts/setup.css" rel="stylesheet" />
-    <link href="/styles/base-frontend.css?001" rel="stylesheet" />
+    <link href="/styles/base-frontend.css?2" rel="stylesheet" />
 </svelte:head>
 
 <Header { data } />
