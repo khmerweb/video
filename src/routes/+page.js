@@ -11,4 +11,3 @@ export async function load({ fetch}) {
     data.settings.frontend = 20
     return data;
 }
-//
