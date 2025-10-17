@@ -116,11 +116,11 @@ nav{
     font-size: 14px;
   }
   .topnav a:hover {
-    background-color: var(--background-dark);
+    background-color: black;
     color: white;
   }
   .topnav a.active, div.active {
-    background-color: var(--background-dark);
+    background-color: black;
     color: white;
   }
   .topnav .icon {
@@ -157,7 +157,7 @@ nav{
   text-align: left;
 }
 .topnav a:hover, .dropdown:hover .dropbtn {
-  background-color: var(--background-dark);
+  background-color: black;
   color: white;
 }
 .dropdown-content a:hover {
