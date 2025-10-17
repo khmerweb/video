@@ -2,7 +2,7 @@
 import { browser } from '$app/environment';
 
 export async function load({ fetch}) {
-    const response = await fetch('http://localhost:8000/api?amount=20');
+    const response = await fetch('https://khmertuber.netlify.app/api');
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }

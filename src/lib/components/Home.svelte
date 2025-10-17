@@ -6,8 +6,9 @@
     const dark = 'brightness(20%)'
     const normal = 'brightness(100%)'
     const laodingVideo = 'NcQQVbioeZk'
-    let pageAmount = $state(Math.ceil(data.counts.latest/data.settings.frontend))
-    let category = $state('news')
+    let pageAmount = $state(Math.ceil(data.count/data.settings.frontend))
+    let category = $state('')
+
     function parseVideos(posts){
         let videos = []
         let thumbs = []
@@ -19,60 +20,64 @@
         return videos
     }
     
-    let latestVideos = parseVideos(data.latestPosts)
-    latestVideos.category = 'latest'
     let latestMovies = parseVideos(data.postsByCategory[0])
-    latestMovies.category = 'movie'
+    latestMovies.category = data.categories[0]
     let latestTravel = parseVideos(data.postsByCategory[1])
-    latestTravel.category = 'travel'
-    let latestGame = parseVideos(data.postsByCategory[2])
-    latestGame.category = 'game'
+    latestTravel.category = data.categories[1]
+    let latestSimulation = parseVideos(data.postsByCategory[2])
+    latestSimulation.category = data.categories[2]
     let latestSport = parseVideos(data.postsByCategory[3])
-    latestSport.category = 'sport'
-    let latestDoc = parseVideos(data.postsByCategory[4])
-    latestDoc.category = 'doc'
-    let latestDistraction = parseVideos(data.postsByCategory[5])
-    latestDistraction.category = 'distraction'
+    latestSport.category = data.categories[3]
+    let latestDocumentary = parseVideos(data.postsByCategory[4])
+    latestDocumentary.category = data.categories[4]
+    let latestGame = parseVideos(data.postsByCategory[5])
+    latestGame.category = data.categories[5]
     let latestMusic = parseVideos(data.postsByCategory[6])
-    latestMusic.category = 'music'
+    latestMusic.category = data.categories[6]
     let latestFood = parseVideos(data.postsByCategory[7])
-    latestFood.category = 'food'
-    
+    latestFood.category = data.categories[7]
+    let latestVideos = parseVideos(data.latestPosts)
+    latestVideos.category = data.categories[8]
+    let latestNews = parseVideos(data.latestNews)
+    latestNews.category = data.categories[9]
+
     let rawPlaylist = $state({
-        latest: data.latestPosts,
+        home: data.latestPosts,
+        news: data.latestNews,
         movie: data.postsByCategory[0],
         travel: data.postsByCategory[1],
-        game: data.postsByCategory[2],
+        simulation: data.postsByCategory[2],
         sport: data.postsByCategory[3],
-        doc: data.postsByCategory[4],
-        distraction: data.postsByCategory[5],
+        documentary: data.postsByCategory[4],
+        game: data.postsByCategory[5],
         music: data.postsByCategory[6],
         food: data.postsByCategory[7]
-    })
-
-    let videoPlaylists = $state({
-        latest: latestVideos,
-        movie: latestMovies,
-        travel: latestTravel,
-        game: latestGame,
-        sport: latestSport,
-        doc: latestDoc,
-        distraction: latestDistraction,
-        music: latestMusic,
-        food: latestFood
     })
 
     let playlistThumbs = $state({
         movie: rawPlaylist['movie'][0].thumb,
         travel: rawPlaylist['travel'][0].thumb,
-        game: rawPlaylist['game'][0].thumb,
+        simulation: rawPlaylist['simulation'][0].thumb,
         sport: rawPlaylist['sport'][0].thumb,
-        doc: rawPlaylist['doc'][0].thumb,
-        distraction: rawPlaylist['distraction'][0].thumb,
+        documentary: rawPlaylist['documentary'][0].thumb,
+        game: rawPlaylist['game'][0].thumb,
         music: rawPlaylist['music'][0].thumb,
         food: rawPlaylist['food'][0].thumb,
     })
 
+    let videoPlaylists = $state({
+        home: latestVideos,
+        news: latestNews,
+        movie: latestMovies,
+        travel: latestTravel,
+        simulation: latestSimulation,
+        sport: latestSport,
+        documentary: latestDocumentary,
+        game: latestGame,
+        music: latestMusic,
+        food: latestFood
+    })
+    
     async function getRandomPlaylist(category, thumbs){
 		const response = await fetch(`/post/playlist/${category}`, {
 			method: 'POST',
@@ -93,8 +98,8 @@
 
     async function newPlaylist(){
         player.unMute()
-        if(player.playlist.category !== 'latest'){
-            player.loadVideoById(laodingVideo)
+        player.loadVideoById(laodingVideo)
+        if(player.playlist.category !== 'news'){
             player.playlist = await getRandomPlaylist(player.playlist.category, player.playlist.thumbs) 
         }
         jq(`.Home .container .wrapper:nth-child(${player.part+1}) img`).css({'filter':normal})
@@ -132,7 +137,7 @@
         player.part = 0
         player.index = 0
         player.thumb = 1
-        player.label = 'ព័ត៌មាន'
+        player.label = 'ទំព័រ​ដើម'
         player.playlist = latestVideos 
         loadVideo(latestVideos )
     }
@@ -141,13 +146,16 @@
         if(obj){posts = obj}
         if(label){player.label = label}
         if(playlist){player.playlist = playlist}
-        pageAmount = Math.ceil(data.counts[playlist.category]/data.settings.frontend)
-        if(player.playlist.category === 'latest'){
-            category = 'news'
+
+        if(player.playlist.category === 'home'){
+            category = ''
+            pageAmount = Math.ceil(data.count/data.settings.frontend)
         }else{
-            category = player.playlist.category
+            category = '/' + player.playlist.category
+            pageAmount = Math.ceil(data.counts[player.playlist.category]/data.settings.frontend)
         }
-        if(player.playlist.category === 'latest'){
+
+        if((player.playlist.category === 'home')||(player.playlist.category === 'news')){
             jq(`.random-video button:nth-child(${player.thumb}) img`).css({'filter':normal})
             jq(`.random-video button:nth-child(${player.thumb}) .playing`).css({'display':'none'})
         }
@@ -218,8 +226,8 @@
                 jq(`.Home .container .wrapper:nth-child(${player.part+1}) p`).css({'display':'none'})
                 player.part += 1
                 if(player.part === player.playlist.length){
-                    if(player.playlist.category !== 'latest'){
-                        player.loadVideoById(laodingVideo)
+                    player.loadVideoById(laodingVideo)
+                    if(player.playlist.category !== 'news'){
                         player.playlist = await getRandomPlaylist(player.playlist.category, player.playlist.thumbs)
                     }
                     player.part = 0
@@ -333,13 +341,12 @@
     <script src="https://www.youtube.com/iframe_api"></script>
 </svelte:head>
 
-
 <section class="main region">
     <div class="feature-post">
         <div class="random-video">
             <button  onclick={()=>changeCategory(videoPlaylists.movie, 'ភាពយន្ត​​​', rawPlaylist.movie, 1)}>
                 <img alt='' src={playlistThumbs.movie} />
-                <p class="news-label">{data.counts.movie} ភាពយន្ត​</p>
+                <p class="news-label">{data.counts.movie} ភាពយន្ត</p>
                 <span class='playing'>កំពុង​លេង...</span>
             </button>
             <button onclick={()=>changeCategory(videoPlaylists.travel, 'ដើរ​លេង​​​​​', rawPlaylist.travel, 2)}>
@@ -347,9 +354,9 @@
                 <p class="movies-label">{data.counts.travel} ដើរ​លេង</p>
                 <span class='playing'>កំពុង​លេង...</span>
             </button>
-            <button onclick={()=>changeCategory(videoPlaylists.game, '​ពិភព​និម្មិត​', rawPlaylist.game, 3)}>
-                <img alt='' src={playlistThumbs.game} />
-                <p class="movies-label">{data.counts.game} ពិភព​និម្មិត</p>
+            <button onclick={()=>changeCategory(videoPlaylists.simulation, '​ពិភព​និម្មិត​', rawPlaylist.simulation, 3)}>
+                <img alt='' src={playlistThumbs.simulation} />
+                <p class="movies-label">{data.counts.simulation} ពិភព​និម្មិត</p>
                 <span class='playing'>កំពុង​លេង...</span>
             </button>
             <button onclick={()=>changeCategory(videoPlaylists.sport, '​កីឡា​​​', rawPlaylist.sport, 4)}>
@@ -357,9 +364,9 @@
                 <p class="movies-label">{data.counts.sport} កីឡា</p>
                 <span class='playing'>កំពុង​លេង...</span>
             </button>
-            <button onclick={()=>changeCategory(videoPlaylists.doc, '​ឯកសារ​​​​​', rawPlaylist.doc, 5)}>
-                <img alt='' src={playlistThumbs.doc} />
-                <p class="movies-label">{data.counts.doc} ឯកសារ</p>
+            <button onclick={()=>changeCategory(videoPlaylists.documentary, '​ឯកសារ​​​​​', rawPlaylist.documentary, 5)}>
+                <img alt='' src={playlistThumbs.documentary} />
+                <p class="movies-label">{data.counts.documentary} ​ឯកសារ</p>
                 <span class='playing'>កំពុង​លេង...</span>
             </button>
             <button onclick={()=>changeCategory(videoPlaylists.food, 'មុខ​ម្ហូប​​​​', rawPlaylist.food, 6)}>
@@ -372,19 +379,20 @@
                 <p class="news-label">{data.counts.music} របាំ​តន្ត្រី</p>
                 <span class='playing'>កំពុង​លេង...</span>
             </button>
-            <button onclick={()=>changeCategory(videoPlaylists.distraction, 'ល្បែងកំសាន្ត​​​​', rawPlaylist.distraction, 8)}>
-                <img alt='' src={playlistThumbs.distraction} />
-                <p class="news-label">{data.counts.distraction} ល្បែងកំសាន្ត​</p>
+            <button onclick={()=>changeCategory(videoPlaylists.game, 'ល្បែងកំសាន្ត​​​​', rawPlaylist.game, 8)}>
+                <img alt='' src={playlistThumbs.game} />
+                <p class="news-label">{data.counts.game} ល្បែងកំសាន្ត</p>
                 <span class='playing'>កំពុង​លេង...</span>
             </button>
             <div class="wrapper">
                 <div id={ytPlayerId}></div>
-                <div class="latest-video">ព័ត៌មាន</div>
+                <div class="latest-video">ទំព័រ​ដើម</div>
                 <div class="channel-logo">
                     <img src="/images/siteLogo.png" alt=''/>
                 </div>
                 <div class="play-all">
-                    <button onclick={()=>changeCategory(latestVideos, 'ព័ត៌មាន', data.latestPosts)} class='center'>ព័ត៌មាន</button>
+                    <button onclick={()=>changeCategory(videoPlaylists.home, 'ទំព័រ​ដើម', rawPlaylist.home)} class='center'>ទំព័រ​ដើម</button>
+                    <button onclick={()=>changeCategory(videoPlaylists.news, 'ព័ត៌មាន', rawPlaylist.news)} class='center'>ព័ត៌មាន</button>
                     <button onclick={()=>nextPrevious('previous')}>វីដេអូមុន</button>
                     <button onclick={newPlaylist} class='new-playlist'>ដូរ​កំរង​វីដេអូ​</button>
                     <button onclick={()=>nextPrevious('next')}>វីដេអូបន្ទាប់</button>
@@ -399,8 +407,8 @@
 <section class="Home region">
     <div class="container">
         {#each posts as post, index}
-            <div class="wrapper">
-                <button onclick={()=>changeCategory(false, false, false, false, index)}>
+            <div class="wrapper" onclick={()=>changeCategory(false, false, false, false, index)}>
+                <button>
                     <img src={post.thumb} alt=''/>
                     {#if post.videos.length}
                     <img class="play-icon" src="/images/play.png" alt=''/>
@@ -408,15 +416,13 @@
                     <p>កំពុង​លេង...</p>
                 </button>
                 <div class="date">{(new Date(post.date)).toLocaleDateString('it-IT')}</div>
-                <button class="title" onclick={()=>changeCategory(false, false, false, false, index)}>
-                    {post.title}
-                </button>
+                <div class="title">{post.title}</div>
             </div>
         {/each}
     </div>
     <div class="navigation">
         <span>ទំព័រ </span>
-        <select onchange={(event)=>{document.location = `/${category}/${event.target.value}`}}>
+        <select onchange={(event)=>{document.location = `${category}/${event.target.value}`}}>
             {#each [...Array(pageAmount).keys()] as pageNumber}
                 <option>{pageNumber+1}</option>
             {/each}
@@ -426,6 +432,7 @@
 </section>
 
 <style>
+    
     .random-video{
         display: grid;
         grid-template-columns: calc(33.33% - 6.66px) calc(33.33% - 6.66px) calc(33.33% - 6.66px);
@@ -442,7 +449,7 @@
         position: relative;
         width: 100%;
         height: 100%;
-        padding-top: 54.25%;
+        padding-top: 53.4%;
         border: none;
     }
     .random-video button:hover{
@@ -460,7 +467,7 @@
         position: absolute;
         top: 0;
         left: 0;
-        background: rgb(44, 44, 44);
+        background: var(--background-dark);
         color: white;
         text-align: center;
         font-family: Vidaloka, OdorMeanChey;
@@ -524,21 +531,19 @@
         display: grid;
         grid-template-columns: repeat(4, calc(100% / 4 - 11.25px));
         grid-gap: 30px 15px;
-        padding: 15px 0 30px;
+        padding: 15px 0;
     }
     .Home .container .wrapper button{
         position: relative;
         padding-top: 56.25%;
         overflow: hidden;
         width: 100%;
-        top: 0;
-        left: 0;
+        display: block;
         border: none;
-        text-align: left;
-        background: transparent;
     }
     .Home .container .wrapper .title{
-        color: var(--link);
+        padding-top: 5px !important;
+        line-height: 1.25;
     }
     .Home button:hover,
     .Home .container .wrapper .title:hover{
@@ -553,7 +558,6 @@
         left: 0;
     }
     .Home .container .wrapper button .play-icon{
-        position: absolute;
         width: auto;
         min-height: auto;
         width: 15%;
@@ -577,8 +581,7 @@
         animation: blink 1s steps(2) infinite;
     }
     .Home .container .wrapper .title{
-        padding-top: 5px;
-        font-family: Vidaloka, OdorMeanChey;
+        padding-top: 0;
     }
     .Home .navigation{
         text-align: center;
@@ -593,11 +596,11 @@
         .random-video .wrapper{
             grid-column: 1 / span 1;
             grid-row: 1 / span 1;
-            padding-top: 51.2%;
+            padding-top: 51.7%;
         }
         .Home .container{
             grid-template-columns: 100%;
             padding: 30px 10px;
         }
     }   
-</style>
+    </style>
